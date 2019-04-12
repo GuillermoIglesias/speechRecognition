@@ -1,12 +1,6 @@
-# Python version 3.6.x
-# Librerias requeridas: 
-# 	SpeechRecognition: 
-# 		$ pip install SpeechRecognition
-# 	PyAudio: 
-# 		(windows) $ pip install pyaudio
-# 		(linux)   $ sudo apt-get install python-pyaudio python3-pyaudio
-
-import speech_recognition as sr 
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+import speech_recognition as sr # Libreria principal 
 from math import sqrt # Funciones matematicas para calcular raiz
 
 def recognizeSpeech(rec, mic):
@@ -20,6 +14,8 @@ def recognizeSpeech(rec, mic):
 	# Ajusta la sensibilidad del ruido de ambiente y graba el audio desde el microfono
 	with mic as source:
 		rec.adjust_for_ambient_noise(source)
+		# Muestra la instruccion para comenzar a hablar
+		print('\nAhora puedes decir una operación:\n')
 		audio = rec.listen(source)
 
 	# Valores default para el objeto de respuestas
@@ -59,8 +55,8 @@ def mathOperation(words):
 	# Intenta reconocer la operacion entre las opciones entregadas
 	# Si no funciona, actualiza la respuesta correspondiente al error
 	try:
-		# Si la cantidad de palabras es menor que 5 y mayor que 6 retorna respuesta con error
-		if len(words) < 5 and len(words) > 6:
+		# Si la cantidad de palabras es menor que 5 o mayor que 6 retorna respuesta con error
+		if len(words) < 5 or len(words) > 6:
 			resp['success'] = False
 			resp['error'] = 'No ha sido posible reconocer lo que dijiste.'
 			return resp
@@ -128,11 +124,9 @@ if __name__ == '__main__':
 		'\t- Raíz Cuadrada: Raíz cuadrada de <número> igual <número>'
 	)
 
-	start = '\nAhora puedes decir una operación:\n'
-
-	# Instancia de la clase Recognizer para interpretar la voz
+	# Crea una instancia de la clase Recognizer para interpretar la voz
 	rec = sr.Recognizer()
-	# Instancia de la clase Microphone para utilizar microfono
+	# Crea una instancia de la clase Microphone para utilizar microfono
 	mic = sr.Microphone()
 
 	# Muestra las instrucciones en pantalla
@@ -143,9 +137,6 @@ if __name__ == '__main__':
 	running = True
 
 	while(running):
-		# Muestra la instruccion para comenzar a hablar
-		print(start)
-
 		# Ingresan las instancias de Recognizer y Microphone para comenzar el Speech Recognition
 		speech = recognizeSpeech(rec, mic)
 		
@@ -159,7 +150,7 @@ if __name__ == '__main__':
 				
 				# Dividir las palabras del resultado obtenido en un arreglo
 				words = speech['result'].replace(',', '.').split()
-				
+
 				# Se ingresan las palabras reconocidas a la funcion para calcular la operacion
 				math = mathOperation(words)
 
